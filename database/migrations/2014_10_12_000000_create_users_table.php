@@ -29,16 +29,6 @@ class CreateUsersTable extends Migration
             $table->timestamps();
 
         });
-        Schema::create('staff_course', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('staff_id');
-            $table->unsignedInteger('course_id');
-            $table->timestamps();
-
-            $table->foreign('staff_id')->references('id')->on('staff');
-            $table->foreign('course_id')->references('id')->on('courses');
-        });
-
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('registration_number');
@@ -48,6 +38,17 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->timestamps();
         });
+        Schema::create('staff_course', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBiginteger('staff_id');
+            $table->unsignedBiginteger('course_id');
+            $table->timestamps();
+
+            $table->foreign('staff_id')->references('id')->on('staff');
+            $table->foreign('course_id')->references('id')->on('courses');
+        });
+
+        
 
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
@@ -57,8 +58,8 @@ class CreateUsersTable extends Migration
 
         Schema::create('classroom_student', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('classroom_id');
-            $table->unsignedInteger('student_id');
+            $table->unsignedBiginteger('classroom_id');
+            $table->unsignedBiginteger('student_id');
             $table->timestamps();
 
             $table->foreign('classroom_id')->references('id')->on('classrooms');
@@ -66,8 +67,8 @@ class CreateUsersTable extends Migration
         });
         Schema::create('course_program', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('program_id');
-            $table->unsignedInteger('course_id');
+            $table->unsignedBiginteger('program_id');
+            $table->unsignedBiginteger('course_id');
             $table->timestamps();
 
             $table->foreign('program_id')->references('id')->on('classrooms');
@@ -80,8 +81,8 @@ class CreateUsersTable extends Migration
         });
         Schema::create('staff_role', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('staff_id');
-            $table->unsignedInteger('role_id');
+            $table->unsignedBiginteger('staff_id');
+            $table->unsignedBiginteger('role_id');
             $table->timestamps();
 
             $table->foreign('staff_id')->references('id')->on('staff');
@@ -95,26 +96,31 @@ class CreateUsersTable extends Migration
             $table->string('answer_c');
             $table->string('answer_d');
             $table->string('answer_e');
-            $table->unsignedInteger('course_id');
+            $table->unsignedBiginteger('course_id');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses');
         });
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('student_id');
-            $table->unsignedInteger('exam_id');
+            $table->unsignedBiginteger('student_id');
+            $table->unsignedBiginteger('exam_id');
             $table->string('answer');
             $table->timestamps();
 
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreign('exam_id')->references('id')->on('exams');
         });
+    }
+
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-
+    public function down()
+    {
+        Schema::dropIfExists('staff');
+    }
 }
