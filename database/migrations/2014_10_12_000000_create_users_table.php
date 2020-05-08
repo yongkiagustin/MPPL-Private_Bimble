@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        
+
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -48,7 +48,7 @@ class CreateUsersTable extends Migration
             $table->foreign('course_id')->references('id')->on('courses');
         });
 
-        
+
 
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
@@ -122,5 +122,15 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('staff');
+        Schema::dropIfExists('courses');
+        Schema::dropIfExists('students');
+        Schema::dropIfExists('staff_course');
+        Schema::dropIfExists('classrooms');
+        Schema::dropIfExists('classroom_student');
+        Schema::dropIfExists('course_program');
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('staff_role');
+        Schema::dropIfExists('exams');
+        Schema::dropIfExists('answers');
     }
 }
