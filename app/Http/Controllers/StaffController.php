@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\ModelStaff;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use MongoDB\Driver\Session;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\JWTAuth;
 use function Sodium\add;
 
 class StaffController extends Controller
@@ -14,11 +18,24 @@ class StaffController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function login(Request $request){
+        $credentials = $request ->only('username','password');
+        try {
+            if(! $token = JWTAuth::attempt($credentials)){
+                return response()->json(['error'=>'invalid_credentials'],400);
+            }
+        }catch (JWTException $exception){
+            return response()->json(['error'=>'could_not_create_token'],500);
+        }
+        return response()->json(compact('token'));
+    }
+
     public function index()
     {
         $data = ModelStaff::all();
         return response(['data' => $data]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -38,6 +55,7 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
+
 
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
