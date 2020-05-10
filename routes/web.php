@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::resource('staff','StaffController');
+Route::resource('student','StudentController');
 Route::get('/', function () {
 
     return view('welcome');
