@@ -2,37 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\ModelStaff;
+use App\StaffModel;
 use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use MongoDB\Driver\Session;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
 use function Sodium\add;
 
 class StaffController extends Controller
 {
+    private $model;
+
+    public function __construct(StaffModel $staffModel)
+    {
+        $this->model = $staffModel;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request){
-        $credentials = $request ->only('username','password');
+
+    //TODO : fix login JWT error
+    public function login(Request $request)
+    {
+        $credentials = $request->only('username', 'password');
+        $user = $this->model->auth($credentials)->toArray();
+        if (!$user) return response(['message' => 'Email atau Password salah!'], 401);
         try {
-            if(! $token = JWTAuth::attempt($credentials)){
-                return response()->json(['error'=>'invalid_credentials'],400);
-            }
-        }catch (JWTException $exception){
-            return response()->json(['error'=>'could_not_create_token'],500);
+            $payload = JWTFactory::make($user);
+            dd($payload);
+            $token = JWTAuth::encode($payload);
+
+        }
+        catch (JWTException $exception) {
+            dd($exception);
+            return response()->json(['error' => 'could_not_create_token'], 500);
+
         }
         return response()->json(compact('token'));
     }
 
+    public function getAuthenticatedUser()
+    {
+        try {
+
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+            return response()->json(['token_expired'], $e->getStatusCode());
+
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+            return response()->json(['token_invalid'], $e->getStatusCode());
+
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+            return response()->json(['token_absent'], $e->getStatusCode());
+
+        }
+
+        return response()->json(compact('user'));
+    }
+
     public function index()
     {
-        $data = ModelStaff::all();
+        $data = StaffModel::all();
         return response(['data' => $data]);
     }
 
@@ -59,7 +101,7 @@ class StaffController extends Controller
 
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
-        $result = ModelStaff::create($data);
+        $result = StaffModel::create($data);
         if ($result) {
             return response(['message' => 'Staff Berhasil Dibuat!']);
         }
@@ -74,7 +116,7 @@ class StaffController extends Controller
      */
     public function show($id)
     {
-        $data = ModelStaff::find($id);
+        $data = StaffModel::find($id);
         return response(['data' => $data]);
     }
 
