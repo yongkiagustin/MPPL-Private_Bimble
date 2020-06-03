@@ -12,15 +12,15 @@ class StaffSeeder extends Seeder
     public function run()
     {
         $faker = Faker\Factory::create();
-                        $limit = 5;
+        $limit = 5;
 
-                        for ($i = 0; $i<$limit;$i++){
-                        DB::table('staff')->insert ([
-                            'name'=> $faker->name,
-                            'email'=> $faker->unique()->email,
-                            'username'=>$faker->userName,
-                            'password'=>@$faker->password,
-                        ]);
-                     }
+        for ($i = 0; $i < $limit; $i++) {
+            DB::table('staff')->insert([
+                'name' => $faker->name,
+                'email' => $faker->unique()->email,
+                'username' => $faker->userName,
+                'password' => @$faker->password,
+            ]);
+        }
     }
 }

@@ -14,13 +14,15 @@ class StudentSeeder extends Seeder
         $faker = Faker\Factory::create();
         $limit = 5;
 
-        for ($i = 0; $i<$limit;$i++){
-            DB::table('students')->insert ([
-                'registration_number'=> $faker ->unique()->randomNumber(),
-                'name'=> $faker->name,
-                'email'=> $faker->unique()->email,
-                'username'=>$faker->unique()->userName,
-                'password'=>@$faker->password,
+        for ($i = 0; $i < $limit; $i++) {
+            DB::table('students')->insert([
+                'registration_number' => $faker->unique()->randomNumber(),
+                'name' => $faker->name,
+                'email' => $faker->unique()->email,
+                'username' => $faker->unique()->userName,
+                'password' => @$faker->password,
+                'classroom_id' => rand(7, 13),
+                'program_id' => rand(1, 4),
             ]);
         }
     }

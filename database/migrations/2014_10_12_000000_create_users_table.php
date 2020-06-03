@@ -23,12 +23,24 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('classrooms', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('programs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
-
         });
+
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('registration_number');
@@ -36,8 +48,33 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('username')->unique();
             $table->string('password');
+            $table->foreignId('classroom_id')->constrained();
+            $table->foreignId('program_id')->constrained();
             $table->timestamps();
         });
+
+        Schema::create('exams', function (Blueprint $table) {
+            $table->id();
+            $table->string('question');
+            $table->string('answer_a');
+            $table->string('answer_b');
+            $table->string('answer_c');
+            $table->string('answer_d');
+            $table->string('answer_e');
+            $table->foreignId('course_id')->constrained();
+            $table->timestamps();
+
+        });
+
+        Schema::create('answers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained();
+            $table->foreignId('exam_id')->constrained();
+            $table->string('answer');
+            $table->timestamps();
+        });
+
+        /*
         Schema::create('staff_course', function (Blueprint $table) {
             $table->id();
             $table->unsignedBiginteger('staff_id');
@@ -46,14 +83,6 @@ class CreateUsersTable extends Migration
 
             $table->foreign('staff_id')->references('id')->on('staff');
             $table->foreign('course_id')->references('id')->on('courses');
-        });
-
-
-
-        Schema::create('classrooms', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
         });
 
         Schema::create('classroom_student', function (Blueprint $table) {
@@ -88,29 +117,7 @@ class CreateUsersTable extends Migration
             $table->foreign('staff_id')->references('id')->on('staff');
             $table->foreign('role_id')->references('id')->on('roles');
         });
-        Schema::create('exams', function (Blueprint $table) {
-            $table->id();
-            $table->string('question');
-            $table->string('answer_a');
-            $table->string('answer_b');
-            $table->string('answer_c');
-            $table->string('answer_d');
-            $table->string('answer_e');
-            $table->unsignedBiginteger('course_id');
-            $table->timestamps();
-
-            $table->foreign('course_id')->references('id')->on('courses');
-        });
-        Schema::create('answers', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBiginteger('student_id');
-            $table->unsignedBiginteger('exam_id');
-            $table->string('answer');
-            $table->timestamps();
-
-            $table->foreign('student_id')->references('id')->on('students');
-            $table->foreign('exam_id')->references('id')->on('exams');
-        });
+        */
     }
 
 
@@ -123,14 +130,15 @@ class CreateUsersTable extends Migration
     {
         Schema::dropIfExists('staff');
         Schema::dropIfExists('courses');
+        Schema::dropIfExists('programs');
         Schema::dropIfExists('students');
-        Schema::dropIfExists('staff_course');
         Schema::dropIfExists('classrooms');
-        Schema::dropIfExists('classroom_student');
-        Schema::dropIfExists('course_program');
-        Schema::dropIfExists('roles');
-        Schema::dropIfExists('staff_role');
         Schema::dropIfExists('exams');
         Schema::dropIfExists('answers');
+//        Schema::dropIfExists('staff_course');
+//        Schema::dropIfExists('classroom_student');
+//        Schema::dropIfExists('course_program');
+//        Schema::dropIfExists('roles');
+//        Schema::dropIfExists('staff_role');
     }
 }
