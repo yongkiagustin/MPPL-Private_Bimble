@@ -18,7 +18,14 @@ Route::resource('student', 'StudentController');
 Route::post('login', 'StaffController@login');
 Route::get('user', 'UserController@getAuthenticatedUser')->middleware('jwt.verify');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-
     return $request->user();
+});
 
+Route::get('/', function () {
+    return response(['message' => 'Access Denied!']);
+});
+Route::prefix('programs')->group(function () {
+    Route::get('/' , 'ProgramController@index');
+    Route::get('/{programId}/courses' , 'ProgramController@courses');
+    Route::get('/{programId}/students' , 'ProgramController@students');
 });

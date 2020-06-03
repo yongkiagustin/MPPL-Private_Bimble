@@ -38,6 +38,7 @@ class CreateUsersTable extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('program_id')->constrained();
             $table->timestamps();
         });
 
