@@ -56,13 +56,13 @@ class CreateUsersTable extends Migration
 
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->text('question');
-            $table->string('image');
-            $table->text('answer_a');
-            $table->text('answer_b');
-            $table->text('answer_c');
-            $table->text('answer_d');
-            $table->text('answer_e');
+            $table->text('question')->nullable();
+            $table->text('image')->nullable();
+            $table->text('answer_a')->nullable();
+            $table->text('answer_b')->nullable();
+            $table->text('answer_c')->nullable();
+            $table->text('answer_d')->nullable();
+            $table->text('answer_e')->nullable();
             $table->foreignId('course_id')->constrained();
             $table->timestamps();
 
