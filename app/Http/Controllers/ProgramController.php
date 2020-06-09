@@ -22,6 +22,14 @@ class ProgramController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $program = $this->model->find($id);
+        return response([
+            'data' => $program
+        ]);
+    }
+
     public function courses($programId)
     {
         $program = $this->model->find($programId);

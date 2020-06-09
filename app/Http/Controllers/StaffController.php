@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\StaffModel;
+use App\Model\StaffModel;
 use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,30 +21,19 @@ class StaffController extends Controller
         $this->model = $staffModel;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    //TODO : fix login JWT error
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
-        $user = $this->model->auth($credentials)->toArray();
-        if (!$user) return response(['message' => 'Email atau Password salah!'], 401);
-        try {
-            $payload = JWTFactory::make($user);
-            dd($payload);
-            $token = JWTAuth::encode($payload);
+        $token = auth()->attempt($credentials);
+        if (!$token)
+            return response(['message' => 'Username atau Password salah!'], 401);
 
-        }
-        catch (JWTException $exception) {
-            dd($exception);
-            return response()->json(['error' => 'could_not_create_token'], 500);
-
-        }
-        return response()->json(compact('token'));
+        return response([
+            'message' => 'Login berhasil',
+            'token' => $token
+        ], 200, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
     }
 
     public function getAuthenticatedUser()

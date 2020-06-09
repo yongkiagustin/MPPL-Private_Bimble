@@ -1,21 +1,25 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class StaffModel extends Model
+class StaffModel extends Authenticatable implements JWTSubject
 {
     protected $table = 'staff';
-    protected $guarded =['id'];
+    protected $guarded = ['id'];
 
-    public function auth($credential): ?StaffModel
+    public function getJWTIdentifier()
     {
+        return $this->getKey();
+    }
 
-        $user = $this->where('username', $credential['username'])->first();
-        if ($user && Hash::check($credential['password'], $user->password)) return $user;
-        return null;
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
 

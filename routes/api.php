@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::resource('staff', 'StaffController');
 Route::resource('student', 'StudentController');
-Route::post('login', 'StaffController@login');
 Route::get('user', 'UserController@getAuthenticatedUser')->middleware('jwt.verify');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -24,8 +23,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/', function () {
     return response(['message' => 'Access Denied!']);
 });
-Route::prefix('programs')->group(function () {
-    Route::get('/' , 'ProgramController@index');
-    Route::get('/{programId}/courses' , 'ProgramController@courses');
-    Route::get('/{programId}/students' , 'ProgramController@students');
+
+Route::post('login', 'StaffController@login');
+Route::middleware(['jwt.auth'])->group(function () {
+
+    Route::prefix('programs')->group(function () {
+        Route::get('/' , 'ProgramController@index')->middleware('jwt.refresh');
+        Route::get('/{id}' , 'ProgramController@show');
+        Route::get('/{programId}/courses' , 'ProgramController@courses');
+        Route::get('/{programId}/students' , 'ProgramController@students');
+    });
+
+    Route::prefix('courses')->group(function () {
+        Route::get('/{id}' , 'CourseController@show');
+        Route::post('/{id}' , 'CourseController@store');
+        Route::post('/answers/{id}' , 'CourseController@answers');
+    });
+
 });

@@ -2,7 +2,11 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Tymon\JWTAuth\Http\Middleware\Authenticate;
+use Tymon\JWTAuth\Http\Middleware\AuthenticateAndRenew;
+use Tymon\JWTAuth\Http\Middleware\RefreshToken;
 
 class Kernel extends HttpKernel
 {
@@ -20,6 +24,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        CorsMiddleware::class,
     ];
 
     /**
@@ -53,6 +58,8 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
+        'jwt.renew' => AuthenticateAndRenew::class,
+        'jwt.refresh' => RefreshToken::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
