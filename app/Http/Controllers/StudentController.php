@@ -10,16 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $data = StudentModel::all();
-        return response(['data' => $data]);
-    }
+
 
 
     /**
@@ -39,12 +30,7 @@ class StudentController extends Controller
         return response(['message' => 'Tidak dapat membuat akun staff'], 422);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         $data = StudentModel::find($id);
@@ -52,13 +38,6 @@ class StudentController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
 
