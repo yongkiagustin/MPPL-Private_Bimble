@@ -14,12 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::resource('staff', 'StaffController');
-Route::get('student','StudentController@show');
-Route::post('student','StudentController@store');
-Route::put('/student/{id}','StudentController@update');
-Route::delete('/student/{id','StudentController@delete');
-
 Route::resource('student', 'StudentController');
+//Route::put('/student/{id}','StudentController@upadate');
 Route::get('user', 'UserController@getAuthenticatedUser')->middleware('jwt.verify');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

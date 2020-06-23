@@ -69,16 +69,6 @@ class StaffController extends Controller
 
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -109,16 +99,6 @@ class StaffController extends Controller
         return response(['data' => $data]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -129,7 +109,23 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $name = $request->name;
+        $email = $request->email;
+        $username = $request->username;
+        $password = $request->password;
+
+        $data = StaffModel::find($id);
+        $data->name = $name;
+        $data->username = $username;
+        $data->email = $email;
+        $data->password = $password = Hash::make($data['password']);
+        $result = $data->save();
+        if ($result) {
+            return response(['message' => 'Data User Berhasil Diubah!']);
+        } else {
+            return response(['message' => 'Data User Gagal Diubah']);
+        }
+
     }
 
     /**
@@ -138,8 +134,15 @@ class StaffController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $data = StaffModel::find($id);
+        $result = $data->delete();
+        if ($result) {
+            return response(['message' => 'Akun Staff Berhasil Dihapus']);
+        } else {
+            return response(['message' => 'Akun Gagal Dihapus']);
+        }
+
     }
 }

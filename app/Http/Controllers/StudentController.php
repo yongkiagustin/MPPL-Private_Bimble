@@ -13,12 +13,10 @@ class StudentController extends Controller
 
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function index(){
+        $data = StudentModel::all();
+        return response(['data' => $data]);
+    }
     public function store(Request $request)
     {
         $data = $request->all();
@@ -45,7 +43,7 @@ class StudentController extends Controller
         $name = $request->name;
         $email = $request->email;
         $username = $request->username;
-        $password = $request->password;
+       // $password = $request->password;
         $classroom_id = $request->classroom_id;
         $program_id = $request->program_id;
 
@@ -53,8 +51,8 @@ class StudentController extends Controller
         $data->registration_number = $registration_number;
         $data->name =$name;
         $data->email = $email;
-        $data->username = $username;
-        $data->password = $password;
+        $data->username = $username ;
+        $data->password = $password = Hash::make($data['password']);
         $data-> classroom_id = $classroom_id;
         $data-> program_id = $program_id;
         $result = $data->save();
